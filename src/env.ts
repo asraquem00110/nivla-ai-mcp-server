@@ -14,6 +14,7 @@ enum NATIVE {
 
 const envSchema = z
   .object({
+    APP_PORT: z.coerce.number().default(3002),
     DB_HOST: z.string().default("localhost"),
     // test: z.nativeEnum(NATIVE),
     // test: z.enum(["a", "b"]).default("a"),
@@ -21,6 +22,7 @@ const envSchema = z
   .strip();
 
 export const envConfig = envSchema.parse({
+  APP_PORT: process.env.APP_PORT,
   DB_HOST: process.env.DB_HOST,
   test: "c",
 });
