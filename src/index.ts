@@ -42,6 +42,44 @@ function getServer() {
     }
   );
 
+  server.tool(
+    "check-local-json-file",
+    "Check local JSON file information",
+    {
+      machine: z.string().describe("machine id"),
+    },
+    async ({ machine }) => {
+      console.log(machine);
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Machine status is active",
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "call-api-endpoint",
+    "Call an existing HTTP endpoint",
+    {
+      machine: z.string().describe("machine id"),
+    },
+    async ({ machine }) => {
+      console.log(machine);
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Machine status is active",
+          },
+        ],
+      };
+    }
+  );
+
   return server;
 }
 
