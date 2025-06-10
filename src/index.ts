@@ -3,7 +3,10 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import express, { Request, Response } from "express";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
+import {
+  CallToolResult,
+  isInitializeRequest,
+} from "@modelcontextprotocol/sdk/types.js";
 import { InMemoryEventStore } from "@modelcontextprotocol/sdk/examples/shared/inMemoryEventStore.js";
 import { randomUUID } from "crypto";
 import { envConfig } from "./env";
@@ -51,7 +54,15 @@ function getServer() {
     {
       machine: z.string().describe("machine serial number"),
     },
-    async ({ machine }) => {
+    async ({ machine }, { sendNotification }): Promise<CallToolResult> => {
+      await sendNotification({
+        method: "notifications/message",
+        params: {
+          level: "info",
+          data: `Sending first notification from ${machine}`,
+        },
+      });
+
       const result = await checkLocalJsonFile({
         machine,
       });
