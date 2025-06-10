@@ -8,6 +8,7 @@ import { InMemoryEventStore } from "@modelcontextprotocol/sdk/examples/shared/in
 import { randomUUID } from "crypto";
 import { envConfig } from "./env";
 import cors from "cors";
+import { checkLocalJsonFile, getDbStatus } from "@/tools";
 
 // Map to store transports by session ID
 const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
@@ -27,10 +28,12 @@ function getServer() {
     "get-db-status",
     "Get Database status",
     {
-      machine: z.string().describe("machine id"),
+      machine: z.string().describe("machine serial number"),
     },
     async ({ machine }) => {
-      console.log(machine);
+      const result = await getDbStatus({
+        machine,
+      });
       return {
         content: [
           {
@@ -46,15 +49,17 @@ function getServer() {
     "check-local-json-file",
     "Check local JSON file information",
     {
-      machine: z.string().describe("machine id"),
+      machine: z.string().describe("machine serial number"),
     },
     async ({ machine }) => {
-      console.log(machine);
+      const result = await checkLocalJsonFile({
+        machine,
+      });
       return {
         content: [
           {
             type: "text",
-            text: "Machine status is active",
+            text: `Machine information is ${JSON.stringify(result[0])}`,
           },
         ],
       };
@@ -65,7 +70,7 @@ function getServer() {
     "call-api-endpoint",
     "Call an existing HTTP endpoint",
     {
-      machine: z.string().describe("machine id"),
+      machine: z.string().describe("machine serial number"),
     },
     async ({ machine }) => {
       console.log(machine);
