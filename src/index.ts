@@ -29,19 +29,21 @@ function getServer() {
 
   server.tool(
     "get-db-status",
-    "Get Database status",
+    "Get Deposit Records Status in local MongoDB",
     {
-      machine: z.string().describe("machine serial number"),
+      deposit: z.string().describe("deposit record identification"),
     },
-    async ({ machine }) => {
-      const result = await getDbStatus({
-        machine,
+    async ({ deposit }) => {
+      const depositRecordResult = await getDbStatus({
+        deposit,
       });
       return {
         content: [
           {
             type: "text",
-            text: "Machine status is active",
+            text: `Deposit Record Details is ${JSON.stringify(
+              depositRecordResult
+            )}`,
           },
         ],
       };
@@ -50,18 +52,18 @@ function getServer() {
 
   server.tool(
     "check-local-json-file",
-    "Check local JSON file information",
+    "Check Machine Status from local JSON file information",
     {
       machine: z.string().describe("machine serial number"),
     },
     async ({ machine }, { sendNotification }): Promise<CallToolResult> => {
-      await sendNotification({
-        method: "notifications/message",
-        params: {
-          level: "info",
-          data: `Sending first notification from ${machine}`,
-        },
-      });
+      // await sendNotification({
+      //   method: "notifications/message",
+      //   params: {
+      //     level: "info",
+      //     data: `Sending first notification from ${machine}`,
+      //   },
+      // });
 
       const result = await checkLocalJsonFile({
         machine,
